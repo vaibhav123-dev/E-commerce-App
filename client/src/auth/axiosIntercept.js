@@ -1,7 +1,7 @@
 import axios from "axios";
-import { store } from "./redux/store"; // import your redux store
-import { setAccessToken } from "./redux/authSlice"; // action to update the access token in redux
-import { getRefreshToken, saveRefreshToken } from "./localStorage"; // helper functions to get and save refresh token
+import { getRefreshToken, saveRefreshToken } from "./localStorage";
+import store from "./../redux/store";
+import { setAccessToken } from "../redux/slices/authSlice";
 
 const API = axios.create({
   baseURL: "http://localhost:8000/api",

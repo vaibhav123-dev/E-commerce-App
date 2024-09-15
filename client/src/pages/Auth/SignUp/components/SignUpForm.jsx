@@ -5,7 +5,8 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { postRequest } from "../../../../auth/apiRequest";
 
 const validationSchema = yup.object({
   firstName: yup
@@ -31,7 +32,8 @@ const validationSchema = yup.object({
     .min(8, "The password should have at minimum length of 8"),
 });
 
-export const Form = () => {
+const Form = () => {
+  const navigate = useNavigate();
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -39,8 +41,15 @@ export const Form = () => {
     password: "",
   };
 
-  const onSubmit = (values) => {
-    return values;
+  const onSubmit = async (values) => {
+    const data = {
+      fullName: values.firstName + values.lastName,
+      email: values.email,
+      password: values.password,
+    };
+    const user = await postRequest("/user/register", data);
+    console.log(user);
+    navigate("/login");
   };
 
   const formik = useFormik({

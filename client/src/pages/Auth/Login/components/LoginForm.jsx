@@ -6,7 +6,12 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { postRequest } from "../../../../auth/apiRequest";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../../redux/slices/userSlice";
+import { setAccessToken } from "../../../../redux/slices/authSlice";
+import { saveRefreshToken } from "../../../../auth/localStorage";
 
 const validationSchema = yup.object({
   email: yup
@@ -20,14 +25,24 @@ const validationSchema = yup.object({
     .min(8, "The password should have at minimum length of 8"),
 });
 
-export const Form = () => {
+const Form = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const initialValues = {
     email: "",
     password: "",
   };
 
-  const onSubmit = (values) => {
-    return values;
+  const onSubmit = async (values) => {
+    const data = {
+      email: values.email,
+      password: values.password,
+    };
+    const user = await postRequest("/user/login", data);
+    dispatch(setUser(user?.data?.user));
+    dispatch(setAccessToken(user?.data?.accessToken));
+    saveRefreshToken(user?.data?.refreshToken);
+    navigate("/");
   };
 
   const formik = useFormik({
@@ -93,14 +108,16 @@ export const Form = () => {
                 </Typography>
               </Box>
               <Typography variant={"subtitle2"}>
-                {/* <Link
-                  component={"a"}
-                  color={"primary"}
-                  href={"/password-reset-simple"}
-                  underline={"none"}
+                <Link
+                  to="/"
+                  style={{
+                    textDecoration: "none",
+                    color: "blue",
+                    marginLeft: "8px",
+                  }}
                 >
                   Forgot your password?
-                </Link> */}
+                </Link>
               </Typography>
             </Box>
             <TextField
@@ -150,3 +167,5 @@ export const Form = () => {
     </Box>
   );
 };
+
+export default Form;

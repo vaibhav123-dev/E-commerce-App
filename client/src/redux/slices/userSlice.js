@@ -4,7 +4,6 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     user: JSON.parse(localStorage.getItem("userInfo")) || {},
-    isSidebarOpen: false,
   },
   reducers: {
     setUser: (state, action) => {

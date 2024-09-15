@@ -13,6 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ThemeModeToggler from "./ThemeModeToggler";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
@@ -178,6 +179,9 @@ function ResponsiveAppBar() {
           </Box>
         </Toolbar>
       </Container>
+      <Box>
+        <ThemeModeToggler />
+      </Box>
     </AppBar>
   );
 }

@@ -2,10 +2,10 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Container from "../../components/Container";
+import Container from "../../../components/Container";
 import Form from "./components/SignUpForm";
 
-export const Signup = () => {
+const Signup = () => {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up("md"), {
     defaultMatches: true,
@@ -60,3 +60,5 @@ export const Signup = () => {
     </>
   );
 };
+
+export default Signup;
