@@ -4,6 +4,12 @@ import bcrypt from "bcrypt";
 
 const userSchema = new Schema(
   {
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+      index: true,
+    },
     email: {
       type: String,
       required: true,
@@ -15,15 +21,15 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
-    fullName: {
-      type: String,
-      required: true,
-      trim: true,
-      index: true,
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
-    avatar: {
-      type: String, // cloudinary url will be stored.
-      required: true,
+    address: {
+      street: String,
+      city: String,
+      country: String,
+      zipCode: String,
     },
     refreshToken: {
       type: String,
