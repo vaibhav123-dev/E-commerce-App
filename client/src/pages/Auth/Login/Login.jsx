@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Container from "../../../components/Container";
-import Form from "./../SignUp/components/SignUpForm";
+import Form from "./components";
 
 const Login = () => {
   const theme = useTheme();
@@ -19,6 +19,7 @@ const Login = () => {
       alignItems={"center"}
       justifyContent={"center"}
       height={1}
+      marginTop={5}
     >
       <Container>
         <Grid container spacing={6}>

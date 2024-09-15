@@ -14,6 +14,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ThemeModeToggler from "./ThemeModeToggler";
+import { useTheme } from "@mui/material/styles";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
@@ -22,7 +23,10 @@ const settings = [
   { text: "Dashboard", path: "/dashboard" },
   { text: "Logout", path: "/logout" },
 ];
+
 function ResponsiveAppBar() {
+  const theme = useTheme();
+  const mode = theme.palette.mode;
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -42,11 +46,22 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "white" }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor:
+          mode === "dark" ? theme.palette.background.default : "white",
+        color: mode === "dark" ? theme.palette.text.primary : "black",
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1, color: "black" }}
+            sx={{
+              display: { xs: "none", md: "flex" },
+              mr: 1,
+              color: mode === "dark" ? theme.palette.text.primary : "black", // Adjust icon color
+            }}
           />
           <Typography
             variant="h6"
@@ -57,20 +72,21 @@ function ResponsiveAppBar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "black",
+              color: mode === "dark" ? theme.palette.text.primary : "black",
             }}
           >
             <Link
               to="/"
               style={{
                 textDecoration: "none",
-                color: "black",
+                color: mode === "dark" ? theme.palette.text.primary : "black",
               }}
             >
               Logo
             </Link>
           </Typography>
 
+          {/* Mobile Menu Icon */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -78,7 +94,9 @@ function ResponsiveAppBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="black"
+              sx={{
+                color: mode === "dark" ? theme.palette.text.primary : "black",
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -100,19 +118,31 @@ function ResponsiveAppBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
+                  <Typography
+                    sx={{
+                      textAlign: "center",
+                      color:
+                        mode === "dark" ? theme.palette.text.primary : "black",
+                    }}
+                  >
+                    {page}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
+
+          {/* Logo and Menu for larger screens */}
           <AdbIcon
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1, color: "black" }}
+            sx={{
+              display: { xs: "flex", md: "none" },
+              mr: 1,
+              color: mode === "dark" ? theme.palette.text.primary : "black",
+            }}
           />
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -120,30 +150,40 @@ function ResponsiveAppBar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "black",
+              color: mode === "dark" ? theme.palette.text.primary : "black",
               textDecoration: "none",
             }}
           >
             LOGO
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "black", display: "block" }}
+                sx={{
+                  my: 2,
+                  color: mode === "dark" ? theme.palette.text.primary : "black",
+                  display: "block",
+                }}
               >
                 {page}
               </Button>
             ))}
           </Box>
+
+          {/* User Avatar */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt="Remy Sharp"
                   src="/static/images/avatar/2.jpg"
-                  sx={{ color: "black" }}
+                  sx={{
+                    color:
+                      mode === "dark" ? theme.palette.text.primary : "black",
+                  }}
                 />
               </IconButton>
             </Tooltip>
@@ -168,7 +208,13 @@ function ResponsiveAppBar() {
                   <Typography sx={{ textAlign: "center" }}>
                     <Link
                       to={setting.path}
-                      style={{ textDecoration: "none", color: "inherit" }}
+                      style={{
+                        textDecoration: "none",
+                        color:
+                          mode === "dark"
+                            ? theme.palette.text.primary
+                            : "black",
+                      }}
                     >
                       {setting.text}
                     </Link>
@@ -177,12 +223,15 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
+
+          {/* Theme Mode Toggler */}
+          <Box sx={{ ml: 2 }}>
+            <ThemeModeToggler />
+          </Box>
         </Toolbar>
       </Container>
-      <Box>
-        <ThemeModeToggler />
-      </Box>
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;
