@@ -1,3 +1,5 @@
+import { Login } from "../pages/Auth/Login";
+import { Signup } from "../pages/Auth/Signup";
 import { AppLayout } from "../pages/Layout";
 
 const routes = [
@@ -5,10 +7,14 @@ const routes = [
     path: "/",
     element: <AppLayout />,
     children: [
-      // {
-      //   path: "/",
-      //   element: <Login />,
-      // },
+      {
+        path: "/register",
+        element: <Signup />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
     ],
   },
   // {
