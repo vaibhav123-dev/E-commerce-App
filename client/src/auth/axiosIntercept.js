@@ -1,11 +1,13 @@
-import axios from 'axios';
-import { store } from './redux/store'; // import your redux store
-import { setAccessToken } from './redux/authSlice'; // action to update the access token in redux
-import { getRefreshToken, saveRefreshToken } from './localStorage'; // helper functions to get and save refresh token
-import { toast } from 'sonner';
+import axios from "axios";
+import { store } from "./redux/store"; // import your redux store
+import { setAccessToken } from "./redux/authSlice"; // action to update the access token in redux
+import { getRefreshToken, saveRefreshToken } from "./localStorage"; // helper functions to get and save refresh token
 
 const API = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: "http://localhost:8000/api",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Request Interceptor
@@ -13,7 +15,7 @@ API.interceptors.request.use(
   async (config) => {
     const { auth } = store.getState();
     if (auth.accessToken) {
-      config.headers['Authorization'] = `Bearer ${auth.accessToken}`;
+      config.headers["Authorization"] = `Bearer ${auth.accessToken}`;
     }
     return config;
   },
@@ -33,7 +35,9 @@ API.interceptors.response.use(
 
       // Hit refresh token endpoint to get a new accessToken
       try {
-        const { data } = await axios.post('/refresh-token', { token: refreshToken });
+        const { data } = await axios.post("/refresh-token", {
+          token: refreshToken,
+        });
         const { accessToken, refreshToken: newRefreshToken } = data;
 
         // Save new tokens
@@ -41,12 +45,9 @@ API.interceptors.response.use(
         saveRefreshToken(newRefreshToken); // Save refreshToken in localStorage
 
         // Retry original request with new accessToken
-        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return API(originalRequest);
       } catch (err) {
-        toast.error('Session expired. Please login again.');
-        // Redirect to login or handle as needed
-        window.location.href = '/login';
         return Promise.reject(err);
       }
     }

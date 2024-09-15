@@ -1,11 +1,11 @@
 import { Login } from "../pages/Auth/Login";
 import { Signup } from "../pages/Auth/Signup";
-import { AppLayout } from "../pages/Layout";
+import { PrivateRoute, PublicLayout } from "../pages/Layout";
 
 const routes = [
   {
     path: "/",
-    element: <AppLayout />,
+    element: <PublicLayout />,
     children: [
       {
         path: "/register",
@@ -17,44 +17,11 @@ const routes = [
       },
     ],
   },
-  // {
-  //   path: "/",
-  //   element: <AuthLayout />,
-  //   children: [
-  //     {
-  //       path: "/dashboard",
-  //       element: <Dashboard />,
-  //     },
-  //     {
-  //       path: "/tasks",
-  //       element: <Tasks />,
-  //     },
-  //     {
-  //       path: "/completed/:status",
-  //       element: <Tasks />,
-  //     },
-  //     {
-  //       path: "/todo/:status",
-  //       element: <Tasks />,
-  //     },
-  //     {
-  //       path: "/trashed",
-  //       element: <Trash />,
-  //     },
-  //     {
-  //       path: "/in progress/:status",
-  //       element: <Tasks />,
-  //     },
-  //     {
-  //       path: "/task/:id",
-  //       element: <TaskDetails />,
-  //     },
-  //     {
-  //       path: "/team",
-  //       element: <Users />,
-  //     },
-  //   ],
-  // },
+  {
+    path: "/",
+    element: <PrivateRoute />,
+    children: [{}],
+  },
 ];
 
 export { routes };

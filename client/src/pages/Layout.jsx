@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useEffect } from "react";
 import API from "./../auth/axiosIntercept";
@@ -17,6 +17,7 @@ export const PublicLayout = () => {
 
 export const PrivateRoute = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const refreshToken = getRefreshToken();
@@ -28,10 +29,10 @@ export const PrivateRoute = () => {
         })
         .catch(() => {
           // Handle error (e.g., redirect to login if refresh fails)
-          window.location.href = "/login";
+          navigate("/login");
         });
     }
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   return (
     <div>
