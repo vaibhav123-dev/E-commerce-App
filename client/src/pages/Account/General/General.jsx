@@ -82,7 +82,7 @@ const General = () => {
         data
       );
       if (profile) {
-        showSnackbar("profile update successful", "success");
+        showSnackbar("Profile update successful", "success");
       }
     } catch (error) {
       console.error("Error updating profile:", error);

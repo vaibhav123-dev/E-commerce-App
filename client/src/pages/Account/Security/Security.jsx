@@ -6,11 +6,9 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-
 import Page from "../components/Page";
 import { postRequest } from "../../../auth/apiRequest";
+import { useSnackbar } from "../../../context";
 
 const validationSchema = yup.object({
   currentPassword: yup.string().required("Please specify your password"),
@@ -25,21 +23,28 @@ const validationSchema = yup.object({
 });
 
 const Security = () => {
+  const showSnackbar = useSnackbar();
+
   const initialValues = {
     currentPassword: "",
     newPassword: "",
     repeatPassword: "",
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data, { resetForm }) => {
     if (data?.newPassword != data?.repeatPassword) {
-      console.log("Invalid Password");
+      showSnackbar("Password does not match", "error");
+      return;
     }
     try {
       const user = await postRequest("user/update-password", data);
-      console.log(user);
+      if (user) {
+        showSnackbar("Password updated successfully", "success");
+        resetForm();
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
+      showSnackbar("Failed to update password", "error");
     }
   };
 
@@ -62,13 +67,6 @@ const Security = () => {
             <Typography variant="h6" fontWeight={700}>
               Change your password
             </Typography>
-            <Button
-              size={"large"}
-              variant={"outlined"}
-              sx={{ marginTop: { xs: 2, md: 0 } }}
-            >
-              Log out
-            </Button>
           </Box>
           <Box paddingY={4}>
             <Divider />
@@ -151,28 +149,6 @@ const Security = () => {
               </Grid>
               <Grid item xs={12}>
                 <Divider />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Switch color="primary" defaultChecked />}
-                  label={
-                    <Typography variant="subtitle1" fontWeight={700}>
-                      Public Profile
-                    </Typography>
-                  }
-                  labelPlacement="end"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Switch color="primary" />}
-                  label={
-                    <Typography variant="subtitle1" fontWeight={700}>
-                      Expose your email
-                    </Typography>
-                  }
-                  labelPlacement="end"
-                />
               </Grid>
               <Grid item container xs={12}>
                 <Box

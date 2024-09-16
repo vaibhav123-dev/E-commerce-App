@@ -17,13 +17,37 @@ import ThemeModeToggler from "./ThemeModeToggler";
 import { useTheme } from "@mui/material/styles";
 import { postRequest } from "../auth/apiRequest";
 import { clearTokens } from "../auth/localStorage";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
-  { text: "Profile", path: "/profile/general" },
-  { text: "Register", path: "/register" },
-  { text: "Dashboard", path: "/dashboard" },
-  { text: "Logout", path: "/logout" },
+  {
+    text: "Edit Profile",
+    path: "/profile/general",
+    icon: <PersonAddAltIcon sx={{ width: 20, height: 20, color: "blue" }} />,
+  },
+  {
+    text: "Wishlist",
+    path: "/register",
+    icon: (
+      <FavoriteBorderIcon sx={{ width: 20, height: 20, color: "#FF5733" }} />
+    ),
+  },
+  {
+    text: "Orders",
+    path: "/dashboard",
+    icon: (
+      <AddShoppingCartIcon sx={{ width: 20, height: 20, color: "orange" }} />
+    ),
+  },
+  {
+    text: "Logout",
+    path: "/logout",
+    icon: <LogoutIcon sx={{ width: 20, height: 20, color: "red" }} />,
+  },
 ];
 
 function ResponsiveAppBar() {
@@ -225,20 +249,23 @@ function ResponsiveAppBar() {
                       : handleCloseUserMenu
                   }
                 >
-                  <Typography sx={{ textAlign: "center" }}>
-                    <Link
-                      to={setting.path}
-                      style={{
-                        textDecoration: "none",
-                        color:
-                          mode === "dark"
-                            ? theme.palette.text.primary
-                            : "black",
-                      }}
-                    >
-                      {setting.text}
-                    </Link>
-                  </Typography>
+                  <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                    {setting.icon}
+                    <Typography sx={{ textAlign: "center", fontSize: 14 }}>
+                      <Link
+                        to={setting.path}
+                        style={{
+                          textDecoration: "none",
+                          color:
+                            mode === "dark"
+                              ? theme.palette.text.primary
+                              : "black",
+                        }}
+                      >
+                        {setting.text}
+                      </Link>
+                    </Typography>
+                  </Box>
                 </MenuItem>
               ))}
             </Menu>
