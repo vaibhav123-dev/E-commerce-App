@@ -10,6 +10,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 
 import Page from "../components/Page";
+import { postRequest } from "../../../auth/apiRequest";
 
 const validationSchema = yup.object({
   currentPassword: yup.string().required("Please specify your password"),
@@ -30,8 +31,16 @@ const Security = () => {
     repeatPassword: "",
   };
 
-  const onSubmit = (values) => {
-    return values;
+  const onSubmit = async (data) => {
+    if (data?.newPassword != data?.repeatPassword) {
+      console.log("Invalid Password");
+    }
+    try {
+      const user = await postRequest("user/update-password", data);
+      console.log(user);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   const formik = useFormik({

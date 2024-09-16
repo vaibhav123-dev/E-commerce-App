@@ -10,6 +10,7 @@ import Page from "../components/Page";
 import { Link } from "react-router-dom";
 import { patchRequest } from "../../../auth/apiRequest";
 import { useSelector } from "react-redux";
+import { useSnackbar } from "../../../context";
 
 const validationSchema = yup.object({
   firstName: yup
@@ -51,14 +52,16 @@ const validationSchema = yup.object({
 
 const General = () => {
   const { user } = useSelector((state) => state.user);
+  const showSnackbar = useSnackbar();
+
   const initialValues = {
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     email: user?.email || "",
-    address: "",
-    country: "",
-    city: "",
-    pin: "",
+    address: user?.address?.street || "",
+    country: user?.address?.country || "",
+    city: user?.address?.city || "",
+    pin: user?.address?.pin || "",
   };
 
   const onSubmit = async (values) => {
@@ -73,25 +76,23 @@ const General = () => {
       lastName: values.lastName,
       email: values.email,
     };
-    console.log(data);
     try {
       const profile = await patchRequest(
         `user/update-profile-details/${user?._id}`,
         data
       );
-      console.log(profile); // Check if the response is correct
-      if (!profile) {
-        console.error("Profile update failed");
+      if (profile) {
+        showSnackbar("profile update successful", "success");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
     }
   };
-
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit,
+    enableReinitialize: true,
   });
 
   return (

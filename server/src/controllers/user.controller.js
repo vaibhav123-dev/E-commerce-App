@@ -174,24 +174,33 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const updatePassword = asyncHandler(async (req, res) => {
-  const { oldPassword, newPassword } = req?.body;
+  try {
+    const { currentPassword, newPassword } = req?.body;
 
-  if (!oldPassword && !newPassword) {
-    throw new ApiError(400, "Password is required");
+    if (!currentPassword && !newPassword) {
+      throw new ApiError(400, "Password is required");
+    }
+
+    const user = await User.findById(req?.user?._id);
+
+    const isPasswordCorrect = await user.isPasswordCorrect(currentPassword);
+
+    if (!isPasswordCorrect) {
+      throw new ApiError(400, "Invalid password");
+    }
+
+    user.password = newPassword;
+    await user.save({ validateBeforeSave: false });
+
+    const userObj = user.toObject();
+    delete userObj.password;
+    delete userObj.refreshToken;
+    delete userObj.isAdmin;
+
+    return res.status(200).json(new ApiResponse(200, userObj, "Password update successfully"));
+  } catch (error) {
+    throw new ApiError(500, error.message || "Something went wrong while updating password");
   }
-
-  const user = await User.findById(req?.user?._id);
-
-  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
-
-  if (!isPasswordCorrect) {
-    throw new ApiError(400, "Invalid password");
-  }
-
-  user.password = newPassword;
-  await user.save({ validateBeforeSave: false });
-
-  return res.status(200).json(new ApiResponse(200, {}, "Password update successfully"));
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {

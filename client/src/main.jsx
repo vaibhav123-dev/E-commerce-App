@@ -14,13 +14,16 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-image-lightbox/style.css";
 import "aos/dist/aos.css";
+import { SnackbarProvider } from "./context/index.js";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <UserProvider>
-      <Page>
-        <App />
-      </Page>
+      <SnackbarProvider>
+        <Page>
+          <App />
+        </Page>
+      </SnackbarProvider>
     </UserProvider>
   </Provider>
 );
