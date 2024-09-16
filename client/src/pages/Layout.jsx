@@ -8,6 +8,16 @@ import Footer from "../components/Footer/Footer.jsx";
 import { postRequest } from "../auth/apiRequest.js";
 
 export const PublicLayout = () => {
+  return (
+    <div>
+      <Navbar />
+      <Outlet />
+      <Footer />
+    </div>
+  );
+};
+
+export const PrivateRoute = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,33 +44,6 @@ export const PublicLayout = () => {
       <Navbar />
       <Outlet />
       <Footer />
-    </div>
-  );
-};
-
-export const PrivateRoute = () => {
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const refreshToken = getRefreshToken();
-  //   if (refreshToken) {
-  //     // Try to refresh the accessToken
-  //     API.post("/user/refresh-token", { refreshToken: refreshToken })
-  //       .then(({ data }) => {
-  //         dispatch(setAccessToken(data.accessToken));
-  //       })
-  //       .catch(() => {
-  //         // Handle error (e.g., redirect to login if refresh fails)
-  //         navigate("/login");
-  //       });
-  //   }
-  // }, [dispatch, navigate]);
-
-  return (
-    <div>
-      <Navbar />
-      <Outlet />
     </div>
   );
 };

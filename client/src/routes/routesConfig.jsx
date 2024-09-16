@@ -1,3 +1,4 @@
+import { Billing, General, Security } from "../pages/Account";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/SignUp";
 import { PrivateRoute, PublicLayout } from "../pages/Layout";
@@ -28,7 +29,20 @@ const routes = [
   {
     path: "/",
     element: <PrivateRoute />,
-    children: [{}],
+    children: [
+      {
+        path: "/profile/general",
+        element: <General />,
+      },
+      {
+        path: "/profile/security",
+        element: <Security />,
+      },
+      {
+        path: "/profile/billing",
+        element: <Billing />,
+      },
+    ],
   },
 ];
 

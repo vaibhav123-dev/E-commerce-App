@@ -41,12 +41,7 @@ const Form = () => {
     password: "",
   };
 
-  const onSubmit = async (values) => {
-    const data = {
-      fullName: values.firstName + values.lastName,
-      email: values.email,
-      password: values.password,
-    };
+  const onSubmit = async (data) => {
     const user = await postRequest("/user/register", data);
     console.log(user);
     navigate("/login");
