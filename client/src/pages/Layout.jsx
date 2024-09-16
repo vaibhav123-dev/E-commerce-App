@@ -5,12 +5,14 @@ import API from "./../auth/axiosIntercept";
 import { getRefreshToken } from "../auth/localStorage";
 import { useDispatch } from "react-redux";
 import { setAccessToken } from "../redux/slices/authSlice.js";
+import Footer from "../components/Footer/Footer.jsx";
 
 export const PublicLayout = () => {
   return (
     <div>
       <Navbar />
       <Outlet />
+      <Footer />
     </div>
   );
 };
