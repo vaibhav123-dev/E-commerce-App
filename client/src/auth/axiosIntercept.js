@@ -35,8 +35,8 @@ API.interceptors.response.use(
 
       // Hit refresh token endpoint to get a new accessToken
       try {
-        const { data } = await axios.post("/refresh-token", {
-          token: refreshToken,
+        const { data } = await axios.post("/user/refresh-token", {
+          refreshToken: refreshToken,
         });
         const { accessToken, refreshToken: newRefreshToken } = data;
 

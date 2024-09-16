@@ -12,9 +12,11 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeModeToggler from "./ThemeModeToggler";
 import { useTheme } from "@mui/material/styles";
+import { postRequest } from "../auth/apiRequest";
+import { clearTokens } from "../auth/localStorage";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
@@ -29,6 +31,17 @@ function ResponsiveAppBar() {
   const mode = theme.palette.mode;
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await postRequest(`/user/logout`);
+      navigate("/login");
+      clearTokens()
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -60,7 +73,7 @@ function ResponsiveAppBar() {
             sx={{
               display: { xs: "none", md: "flex" },
               mr: 1,
-              color: mode === "dark" ? theme.palette.text.primary : "black", // Adjust icon color
+              color: mode === "dark" ? theme.palette.text.primary : "black",
             }}
           />
           <Typography
@@ -204,7 +217,14 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting.text} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting.text}
+                  onClick={
+                    setting.text === "Logout"
+                      ? handleLogout
+                      : handleCloseUserMenu
+                  }
+                >
                   <Typography sx={{ textAlign: "center" }}>
                     <Link
                       to={setting.path}
