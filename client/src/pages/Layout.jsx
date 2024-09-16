@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setAccessToken } from "../redux/slices/authSlice.js";
 import Footer from "../components/Footer/Footer.jsx";
 import { postRequest } from "../auth/apiRequest.js";
+import { setUser } from "../redux/slices/userSlice.js";
 
 export const PublicLayout = () => {
   return (
@@ -28,6 +29,7 @@ export const PrivateRoute = () => {
         .then(({ data }) => {
           dispatch(setAccessToken(data?.accessToken));
           saveRefreshToken(data?.refreshToken);
+          dispatch(setUser(data?.user));
         })
         .catch(() => {
           navigate("/login");

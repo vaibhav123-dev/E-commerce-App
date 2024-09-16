@@ -51,7 +51,11 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
       .json(
-        new ApiResponse(200, { accessToken, refreshToken }, "Access token refresh successfully")
+        new ApiResponse(
+          200,
+          { accessToken, refreshToken, user },
+          "Access token refresh successfully"
+        )
       );
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid refresh token");
@@ -59,10 +63,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { password, fullName, email } = req.body;
+  const { password, firstName, lastName, email } = req.body;
 
   // Check if any required field is missing or empty
-  if ([password, fullName, email].some((field) => field?.trim() === "")) {
+  if ([password, firstName, lastName, email].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -79,7 +83,8 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     email,
     password,
-    fullName,
+    firstName,
+    lastName,
   });
 
   // Retrieve created user details
@@ -194,18 +199,25 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const updateUserProfileDetails = asyncHandler(async (req, res) => {
-  const { fullName, email } = req?.body;
+  const { firstName, lastName, email, address } = req?.body;
 
-  if (!fullName || !email) {
-    throw new ApiError(404, "Invalid Details");
+  if ([firstName, lastName, email].some((field) => field?.trim() === "")) {
+    throw new ApiError(400, "All fields are required");
   }
 
+  if (!address) {
+    throw new ApiError(400, "Address is required");
+  }
+
+  const userId = req.params.id;
   const user = await User.findByIdAndUpdate(
-    req.user?._id,
+    userId,
     {
       $set: {
-        fullName,
+        firstName,
+        lastName,
         email,
+        ...(address && { address }),
       },
     },
     { new: true }

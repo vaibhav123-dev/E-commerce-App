@@ -20,7 +20,7 @@ import { clearTokens } from "../auth/localStorage";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
-  { text: "Profile", path: "/profile" },
+  { text: "Profile", path: "/profile/general" },
   { text: "Register", path: "/register" },
   { text: "Dashboard", path: "/dashboard" },
   { text: "Logout", path: "/logout" },
@@ -37,7 +37,7 @@ function ResponsiveAppBar() {
     try {
       await postRequest(`/user/logout`);
       navigate("/login");
-      clearTokens()
+      clearTokens();
     } catch (error) {
       console.error("Logout failed", error);
     }

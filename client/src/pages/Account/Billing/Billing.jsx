@@ -7,9 +7,9 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
 
 import Page from "../components/Page";
+import { Link } from "react-router-dom";
 
 const validationSchema = yup.object({
   cardNumber: yup
@@ -45,8 +45,6 @@ const validationSchema = yup.object({
 });
 
 const Billing = () => {
-  console.log("billing");
-
   const initialValues = {
     cardNumber: "",
     name: "",
@@ -210,10 +208,14 @@ const Billing = () => {
                       <Typography variant={"subtitle2"}>
                         You may also consider to update your{" "}
                         <Link
-                          color={"primary"}
-                          href={"/account-general"}
-                          underline={"none"}
+                          to="/profile/general"
+                          style={{
+                            textDecoration: "none",
+                            width: "100%",
+                            color: "blue",
+                          }}
                         >
+                          {" "}
                           private information.
                         </Link>
                       </Typography>

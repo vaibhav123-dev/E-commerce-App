@@ -2,6 +2,7 @@ import axios from "axios";
 import { getRefreshToken, saveRefreshToken } from "./localStorage";
 import store from "./../redux/store";
 import { setAccessToken } from "../redux/slices/authSlice";
+import { setUser } from "../redux/slices/userSlice";
 
 const API = axios.create({
   baseURL: "http://localhost:8000/api",
@@ -38,12 +39,12 @@ API.interceptors.response.use(
         const { data } = await axios.post("/user/refresh-token", {
           refreshToken: refreshToken,
         });
-        const { accessToken, refreshToken: newRefreshToken } = data;
+        const { accessToken, refreshToken: newRefreshToken, user } = data;
 
         // Save new tokens
         store.dispatch(setAccessToken(accessToken)); // Save accessToken in Redux
         saveRefreshToken(newRefreshToken); // Save refreshToken in localStorage
-
+        store.dispatch(setUser(user));
         // Retry original request with new accessToken
         originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return API(originalRequest);

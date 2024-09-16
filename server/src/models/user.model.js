@@ -35,7 +35,7 @@ const userSchema = new Schema(
       street: String,
       city: String,
       country: String,
-      zipCode: String,
+      pin: String,
     },
     refreshToken: {
       type: String,

@@ -6,23 +6,34 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-
 import Page from "../components/Page";
+import { Link } from "react-router-dom";
+import { patchRequest } from "../../../auth/apiRequest";
+import { useSelector } from "react-redux";
 
 const validationSchema = yup.object({
-  fullName: yup
+  firstName: yup
     .string()
     .trim()
     .min(2, "Please enter a valid name")
     .max(50, "Please enter a valid name")
     .required("Please specify your first name"),
+  lastName: yup
+    .string()
+    .trim()
+    .min(2, "Please enter a valid name")
+    .max(50, "Please enter a valid name")
+    .required("Please specify your last name"),
   email: yup
     .string()
     .trim()
     .email("Please enter a valid email address")
     .required("Email is required."),
-  bio: yup.string().trim().max(500, "Should be less than 500 chars"),
+  address: yup
+    .string()
+    .required("Please specify your address")
+    .min(2, "Please enter a valid address")
+    .max(200, "Please enter a valid address"),
   country: yup
     .string()
     .trim()
@@ -35,26 +46,46 @@ const validationSchema = yup.object({
     .min(2, "Please enter a valid name")
     .max(80, "Please enter a valid name")
     .required("Please specify your city name"),
-  address: yup
-    .string()
-    .required("Please specify your address")
-    .min(2, "Please enter a valid address")
-    .max(200, "Please enter a valid address"),
+  pin: yup.string().trim().required("Please specify your pin code"),
 });
 
 const General = () => {
-  console.log("general");
+  const { user } = useSelector((state) => state.user);
   const initialValues = {
-    fullName: "",
-    bio: "",
-    email: "",
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    email: user?.email || "",
+    address: "",
     country: "",
     city: "",
-    address: "",
+    pin: "",
   };
 
-  const onSubmit = (values) => {
-    return values;
+  const onSubmit = async (values) => {
+    const data = {
+      address: {
+        street: values.address,
+        country: values.country,
+        city: values.city,
+        pin: values.pin,
+      },
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+    };
+    console.log(data);
+    try {
+      const profile = await patchRequest(
+        `user/update-profile-details/${user?._id}`,
+        data
+      );
+      console.log(profile); // Check if the response is correct
+      if (!profile) {
+        console.error("Profile update failed");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   const formik = useFormik({
@@ -68,14 +99,7 @@ const General = () => {
       <Page>
         <Box>
           <Typography variant="h6" gutterBottom fontWeight={700}>
-            Change your private information
-          </Typography>
-          <Typography variant={"subtitle2"} color={"text.secondary"}>
-            Please read our{" "}
-            <Link color={"primary"} href={"/company-terms"} underline={"none"}>
-              terms of use
-            </Link>
-            to be informed how we manage your private data.
+            Change your information
           </Typography>
           <Box paddingY={4}>
             <Divider />
@@ -93,14 +117,37 @@ const General = () => {
                 <TextField
                   label="First name *"
                   variant="outlined"
-                  name={"fullName"}
+                  name={"firstName"}
                   fullWidth
-                  value={formik.values.fullName}
+                  value={formik.values.firstName}
                   onChange={formik.handleChange}
                   error={
-                    formik.touched.fullName && Boolean(formik.errors.fullName)
+                    formik.touched.firstName && Boolean(formik.errors.firstName)
                   }
-                  helperText={formik.touched.fullName && formik.errors.fullName}
+                  helperText={
+                    formik.touched.firstName && formik.errors.firstName
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography
+                  variant={"subtitle2"}
+                  sx={{ marginBottom: 2 }}
+                  fontWeight={700}
+                >
+                  Enter your last name
+                </Typography>
+                <TextField
+                  label="Last name *"
+                  variant="outlined"
+                  name={"lastName"}
+                  fullWidth
+                  value={formik.values.lastName}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.lastName && Boolean(formik.errors.lastName)
+                  }
+                  helperText={formik.touched.lastName && formik.errors.lastName}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -128,19 +175,19 @@ const General = () => {
                   sx={{ marginBottom: 2 }}
                   fontWeight={700}
                 >
-                  Bio
+                  Enter your address
                 </Typography>
                 <TextField
-                  label="Bio"
+                  label="Address *"
                   variant="outlined"
-                  name={"bio"}
-                  multiline
-                  rows={5}
+                  name={"address"}
                   fullWidth
-                  value={formik.values.bio}
+                  value={formik.values.address}
                   onChange={formik.handleChange}
-                  error={formik.touched.bio && Boolean(formik.errors.bio)}
-                  helperText={formik.touched.bio && formik.errors.bio}
+                  error={
+                    formik.touched.address && Boolean(formik.errors.address)
+                  }
+                  helperText={formik.touched.address && formik.errors.address}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -186,25 +233,24 @@ const General = () => {
                   helperText={formik.touched.city && formik.errors.city}
                 />
               </Grid>
-              <Grid item xs={12}>
+
+              <Grid item xs={12} sm={4}>
                 <Typography
                   variant={"subtitle2"}
                   sx={{ marginBottom: 2 }}
                   fontWeight={700}
                 >
-                  Enter your address
+                  Pin code
                 </Typography>
                 <TextField
-                  label="Address *"
+                  label="Pin code *"
                   variant="outlined"
-                  name={"address"}
+                  name={"pin"}
                   fullWidth
-                  value={formik.values.address}
+                  value={formik.values.pin}
                   onChange={formik.handleChange}
-                  error={
-                    formik.touched.address && Boolean(formik.errors.address)
-                  }
-                  helperText={formik.touched.address && formik.errors.address}
+                  error={formik.touched.pin && Boolean(formik.errors.pin)}
+                  helperText={formik.touched.pin && formik.errors.pin}
                 />
               </Grid>
               <Grid item container xs={12}>
@@ -220,10 +266,14 @@ const General = () => {
                     <Typography variant={"subtitle2"}>
                       You may also consider to update your{" "}
                       <Link
-                        color={"primary"}
-                        href={"/account-billing"}
-                        underline={"none"}
+                        to="/profile/billing"
+                        style={{
+                          textDecoration: "none",
+                          width: "100%",
+                          color: "blue",
+                        }}
                       >
+                        {" "}
                         billing information.
                       </Link>
                     </Typography>

@@ -13,29 +13,27 @@ const pages = [
   {
     id: "general",
     title: "General",
-    path: "/profile/general", // Updated path to be absolute
+    path: "/profile/general",
   },
   {
     id: "security",
     title: "Security",
-    path: "/profile/security", // Updated path to be absolute
+    path: "/profile/security",
   },
   {
     id: "billing",
     title: "Billing Information",
-    path: "/profile/billing", // Updated path to be absolute
+    path: "/profile/billing",
   },
 ];
 
 const Page = ({ children }) => {
-  console.log(children);
-  console.log("page");
   const theme = useTheme();
-  const location = useLocation(); // Get the current path
+  const location = useLocation();
   const [activeLink, setActiveLink] = useState("");
 
   useEffect(() => {
-    setActiveLink(location.pathname); // Update activeLink based on current path
+    setActiveLink(location.pathname);
   }, [location.pathname]);
 
   return (
@@ -48,10 +46,10 @@ const Page = ({ children }) => {
             gutterBottom
             sx={{ color: "common.white" }}
           >
-            Account settings
+            Account
           </Typography>
           <Typography variant="h6" sx={{ color: "common.white" }}>
-            Change account information and settings
+            Change your account information!
           </Typography>
         </Container>
       </Box>

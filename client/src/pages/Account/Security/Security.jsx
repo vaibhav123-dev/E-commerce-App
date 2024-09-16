@@ -6,7 +6,6 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 
@@ -25,7 +24,6 @@ const validationSchema = yup.object({
 });
 
 const Security = () => {
-  console.log("security");
   const initialValues = {
     currentPassword: "",
     newPassword: "",
@@ -176,18 +174,6 @@ const Security = () => {
                   width={1}
                   margin={"0 auto"}
                 >
-                  <Box marginBottom={{ xs: 1, sm: 0 }}>
-                    <Typography variant={"subtitle2"}>
-                      You may also consider to update your{" "}
-                      <Link
-                        color={"primary"}
-                        href={"/account-notifications"}
-                        underline={"none"}
-                      >
-                        notification settings.
-                      </Link>
-                    </Typography>
-                  </Box>
                   <Button size={"large"} variant={"contained"} type={"submit"}>
                     Save
                   </Button>
