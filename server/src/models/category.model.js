@@ -4,6 +4,7 @@ const categorySchema = new Schema({
   name: {
     type: String,
     required: true,
+    enum: ["fashion", "electronics", "furniture", "appliances", "beauty", "health"],
   },
   description: { type: String },
   createdAt: {
