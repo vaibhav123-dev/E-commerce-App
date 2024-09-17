@@ -21,6 +21,8 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useSelector } from "react-redux";
+import { getInitials } from "./../services/index";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = [
@@ -55,7 +57,11 @@ function ResponsiveAppBar() {
   const mode = theme.palette.mode;
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const { firstName, lastName } = useSelector((state) => state.user.user);
+
   const navigate = useNavigate();
+
+  const initials = getInitials(firstName, lastName);
 
   const handleLogout = async () => {
     try {
@@ -215,13 +221,19 @@ function ResponsiveAppBar() {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/2.jpg"
+                  alt={`${firstName} ${lastName}`}
                   sx={{
+                    backgroundColor:
+                      mode === "dark"
+                        ? theme.palette.grey[900]
+                        : theme.palette.grey[300],
                     color:
                       mode === "dark" ? theme.palette.text.primary : "black",
+                    fontSize: "1.2rem",
                   }}
-                />
+                >
+                  {initials}
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
