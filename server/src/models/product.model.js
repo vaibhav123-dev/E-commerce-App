@@ -29,12 +29,7 @@ const productSchema = new Schema({
     type: Number,
     default: 0,
   },
-  images: [
-    {
-      url: String,
-      public_id: String,
-    },
-  ],
+  images: [String],
   createdAt: {
     type: Date,
     default: Date.now,
