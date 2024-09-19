@@ -1,4 +1,5 @@
 import { Billing, General, Security } from "../pages/Account";
+import AdminPanel from "../pages/Admin/AdminPanel";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/SignUp";
 import { PrivateRoute, PublicLayout } from "../pages/Layout";
@@ -23,6 +24,10 @@ const routes = [
         path: "/login",
         element: <Login />,
         errorElement: <NotFound />,
+      },
+      {
+        path: "/admin",
+        element: <AdminPanel />,
       },
     ],
   },
