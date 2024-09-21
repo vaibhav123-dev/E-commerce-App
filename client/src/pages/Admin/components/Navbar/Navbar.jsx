@@ -26,15 +26,15 @@ import ThemeModeToggler from "./../../../../components/ThemeModeToggler";
 import AdbIcon from "@mui/icons-material/Adb";
 
 const menuItems = [
-  { name: "Dashboard", path: "/dashboard", icon: <DashboardIcon /> },
+  { name: "Dashboard", path: "/admin/dashboard", icon: <DashboardIcon /> },
   {
     name: "Products",
-    path: "/products",
+    path: "/admin/products",
     icon: <ProductionQuantityLimitsIcon />,
   },
-  { name: "Orders", path: "/orders", icon: <PlaylistAddCheckIcon /> },
-  { name: "Statistics", path: "/statistics", icon: <QueryStatsIcon /> },
-  { name: "Users", path: "/users", icon: <PeopleAltIcon /> },
+  { name: "Orders", path: "/admin/orders", icon: <PlaylistAddCheckIcon /> },
+  { name: "Statistics", path: "/admin/statistics", icon: <QueryStatsIcon /> },
+  { name: "Users", path: "/admin/users", icon: <PeopleAltIcon /> },
 ];
 
 const drawerWidth = 250;
@@ -202,8 +202,7 @@ function AdminNavbar() {
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
-      >
-      </Box>
+      ></Box>
     </Box>
   );
 }

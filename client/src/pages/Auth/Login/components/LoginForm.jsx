@@ -34,6 +34,7 @@ const Form = () => {
   };
 
   const onSubmit = async (values) => {
+    console.log(values);
     const data = {
       email: values.email,
       password: values.password,

@@ -88,6 +88,7 @@ const General = () => {
       console.error("Error updating profile:", error);
     }
   };
+  
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,

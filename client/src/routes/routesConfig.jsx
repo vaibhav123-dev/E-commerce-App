@@ -1,6 +1,7 @@
 import { Billing, General, Security } from "../pages/Account";
 import AdminLayout from "../pages/Admin/AdminPanel";
 import { Product } from "../pages/Admin/components";
+import Dashboard from "../pages/Admin/components/Dashboard";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/SignUp";
 import { PrivateRoute, PublicLayout } from "../pages/Layout";
@@ -47,13 +48,29 @@ const routes = [
     ],
   },
   {
-    path: "/",
+    path: "/admin",
     element: <AdminLayout />,
     children: [
       {
-        path: "/admin",
-        element: <Product />,
+        path: "/admin/dashboard",
+        element: <Dashboard />,
+        errorElement: <NotFound />,
       },
+      {
+        path: "/admin/products",
+        element: <Product />,
+        errorElement: <NotFound />,
+      },
+      // {
+      //   path: "/admin/products",
+      //   element: <Product />,
+      //   errorElement: <NotFound />,
+      // },
+      // {
+      //   path: "/admin/products",
+      //   element: <Product />,
+      //   errorElement: <NotFound />,
+      // },
     ],
   },
 ];

@@ -26,3 +26,11 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     throw new ApiError(401, error?.message || "Invalid Access Token");
   }
 });
+
+export const isAdminRoute = (req, res, next) => {
+  if (req?.user && req?.user?.isAdmin) {
+    next();
+  } else {
+    throw new ApiError(401, error?.message || "Not authorized as admin. Try login as admin.");
+  }
+};

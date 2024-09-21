@@ -11,9 +11,9 @@ import { setUser } from "../redux/slices/userSlice.js";
 export const PublicLayout = () => {
   return (
     <div>
-      {/* <Navbar /> */}
+      <Navbar />
       <Outlet />
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };

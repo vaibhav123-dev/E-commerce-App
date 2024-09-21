@@ -1,5 +1,7 @@
+import { Box } from "@mui/material";
+
 const Dashboard = () => {
-  return <div>Dashboard</div>;
+  return <Box sx={{ margin: "80px" }}>Dashboard</Box>;
 };
 
 export default Dashboard;

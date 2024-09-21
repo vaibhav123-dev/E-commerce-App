@@ -1,175 +1,231 @@
-import { useFormik } from "formik";
-import * as yup from "yup";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { Link, useNavigate } from "react-router-dom";
+import MenuItem from "@mui/material/MenuItem";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import { postRequest } from "../../../../auth/apiRequest";
 
 const validationSchema = yup.object({
-  firstName: yup
-    .string()
-    .trim()
-    .min(2, "Please enter a valid name")
-    .max(50, "Please enter a valid name")
-    .required("Please specify your first name"),
-  lastName: yup
-    .string()
-    .trim()
-    .min(2, "Please enter a valid name")
-    .max(50, "Please enter a valid name")
-    .required("Please specify your last name"),
-  email: yup
-    .string()
-    .trim()
-    .email("Please enter a valid email address")
-    .required("Email is required."),
-  password: yup
-    .string()
-    .required("Please specify your password")
-    .min(8, "The password should have at minimum length of 8"),
+  name: yup.string().required("Please enter the product name"),
+  description: yup.string(),
+  price: yup.number().required("Please specify the price"),
+  category: yup.string().required("Please select a category"),
+  brand: yup.string(),
+  stock: yup.number().required("Please specify the stock"),
+  ratings: yup.number().required("Please specify the ratings"),
+  numReviews: yup.number().required("Please specify the number of reviews"),
+  images: yup.array().of(yup.string().url("Please enter valid image URLs")),
 });
 
 const Form = () => {
-  const navigate = useNavigate();
   const initialValues = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
+    name: "",
+    description: "",
+    price: "",
+    category: "",
+    brand: "",
+    stock: "",
+    ratings: 0,
+    numReviews: 0,
+    images: [""],
   };
 
   const onSubmit = async (data) => {
-    const user = await postRequest("/user/register", data);
-    console.log(user);
-    navigate("/login");
+    console.log("Form data: ", data); // Check if data is being logged
+    try {
+      // Example: Perform API call
+      const product = await postRequest("/product/add-product", data);
+      console.log("Product added:", product);
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
   };
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit,
+    enableReinitialize: true, // Add this if needed for dynamic initialValues
   });
 
   return (
     <Box>
       <Box marginBottom={4}>
         <Typography
-          sx={{
-            textTransform: "uppercase",
-            fontWeight: "medium",
-          }}
-          gutterBottom
-          color={"text.secondary"}
-        >
-          Signup
-        </Typography>
-        <Typography
           variant="h4"
           sx={{
             fontWeight: 700,
           }}
         >
-          Create an account
-        </Typography>
-        <Typography color="text.secondary">
-          Fill out the form to get started.
+          ADD PRODUCT
         </Typography>
       </Box>
-      <form onSubmit={formik.handleSubmit}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault(); // Prevent page reload
+          formik.handleSubmit(e); // Call formik submit handler
+        }}
+      >
         <Grid container spacing={4}>
           <Grid item xs={12} sm={6}>
             <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
-              Enter your first name
+              Product Name
             </Typography>
             <TextField
-              label="First name *"
+              label="Name *"
               variant="outlined"
-              name={"firstName"}
+              name="name"
               fullWidth
-              value={formik.values.firstName}
+              value={formik.values.name}
               onChange={formik.handleChange}
-              error={
-                formik.touched.firstName && Boolean(formik.errors.firstName)
-              }
-              helperText={formik.touched.firstName && formik.errors.firstName}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name && formik.errors.name}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
-              Enter your last name
+              Description
             </Typography>
             <TextField
-              label="Last name *"
+              label="Description"
               variant="outlined"
-              name={"lastName"}
+              name="description"
               fullWidth
-              value={formik.values.lastName}
+              value={formik.values.description}
               onChange={formik.handleChange}
-              error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-              helperText={formik.touched.lastName && formik.errors.lastName}
+              error={
+                formik.touched.description && Boolean(formik.errors.description)
+              }
+              helperText={
+                formik.touched.description && formik.errors.description
+              }
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
-              Enter your email
+              Price
             </Typography>
             <TextField
-              label="Email *"
+              label="Price *"
               variant="outlined"
-              name={"email"}
+              name="price"
               fullWidth
-              value={formik.values.email}
+              type="number"
+              value={formik.values.price}
               onChange={formik.handleChange}
-              error={formik.touched.email && Boolean(formik.errors.email)}
-              helperText={formik.touched.email && formik.errors.email}
+              error={formik.touched.price && Boolean(formik.errors.price)}
+              helperText={formik.touched.price && formik.errors.price}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
-              Enter your password
+              Category
             </Typography>
             <TextField
-              label="Password *"
+              select
+              label="Category *"
               variant="outlined"
-              name={"password"}
-              type={"password"}
+              name="category"
               fullWidth
-              value={formik.values.password}
+              value={formik.values.category}
               onChange={formik.handleChange}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
-            />
-          </Grid>
-          <Grid item container xs={12}>
-            <Box
-              display="flex"
-              flexDirection={{ xs: "column", sm: "row" }}
-              alignItems={{ xs: "stretched", sm: "center" }}
-              justifyContent={"space-between"}
-              width={1}
-              maxWidth={600}
-              margin={"0 auto"}
+              error={formik.touched.category && Boolean(formik.errors.category)}
+              helperText={formik.touched.category && formik.errors.category}
             >
-              <Box marginBottom={{ xs: 1, sm: 0 }}>
-                <Typography variant={"subtitle2"}>
-                  Already have an account?
-                  <Link
-                    to="/login"
-                    style={{
-                      textDecoration: "none",
-                      color: "blue",
-                      marginLeft: "8px",
-                    }}
-                  >
-                    Login
-                  </Link>
-                </Typography>
-              </Box>
-              <Button size={"large"} variant={"contained"} type={"submit"}>
-                Sign up
+              <MenuItem value="electronics">Electronic</MenuItem>
+              <MenuItem value="beauty">Beauty</MenuItem>
+              <MenuItem value="fashion">Fashion</MenuItem>
+              <MenuItem value="furniture">Furniture</MenuItem>
+              <MenuItem value="health">Health</MenuItem>
+              <MenuItem value="appliances">Appliances</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
+              Brand
+            </Typography>
+            <TextField
+              label="Brand"
+              variant="outlined"
+              name="brand"
+              fullWidth
+              value={formik.values.brand}
+              onChange={formik.handleChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
+              Stock
+            </Typography>
+            <TextField
+              label="Stock *"
+              variant="outlined"
+              name="stock"
+              type="number"
+              fullWidth
+              value={formik.values.stock}
+              onChange={formik.handleChange}
+              error={formik.touched.stock && Boolean(formik.errors.stock)}
+              helperText={formik.touched.stock && formik.errors.stock}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
+              Ratings
+            </Typography>
+            <TextField
+              label="Ratings *"
+              variant="outlined"
+              name="ratings"
+              type="number"
+              fullWidth
+              value={formik.values.ratings}
+              onChange={formik.handleChange}
+              error={formik.touched.ratings && Boolean(formik.errors.ratings)}
+              helperText={formik.touched.ratings && formik.errors.ratings}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
+              Number of Reviews
+            </Typography>
+            <TextField
+              label="Number of Reviews *"
+              variant="outlined"
+              name="numReviews"
+              type="number"
+              fullWidth
+              value={formik.values.numReviews}
+              onChange={formik.handleChange}
+              error={
+                formik.touched.numReviews && Boolean(formik.errors.numReviews)
+              }
+              helperText={formik.touched.numReviews && formik.errors.numReviews}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
+              Images
+            </Typography>
+            <TextField
+              label="Image URLs"
+              variant="outlined"
+              name="images"
+              fullWidth
+              value={formik.values.images}
+              onChange={(e) =>
+                formik.setFieldValue("images", e.target.value.split(","))
+              }
+              helperText="Add multiple image URLs separated by commas"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Box display="flex" justifyContent="flex-end">
+              <Button size={"large"} variant={"contained"} type="submit">
+                Add Product
               </Button>
             </Box>
           </Grid>
