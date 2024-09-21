@@ -1,4 +1,6 @@
 import { Billing, General, Security } from "../pages/Account";
+import AdminLayout from "../pages/Admin/AdminPanel";
+import { Product } from "../pages/Admin/components";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/SignUp";
 import { PrivateRoute, PublicLayout } from "../pages/Layout";
@@ -41,6 +43,16 @@ const routes = [
       {
         path: "/profile/billing",
         element: <Billing />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "/admin",
+        element: <Product />,
       },
     ],
   },

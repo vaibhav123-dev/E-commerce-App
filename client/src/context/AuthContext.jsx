@@ -9,6 +9,7 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true); // Add loading state
   const [fetchTask, setFetchTask] = useState(false);
   const [fetchUser, setFetchUser] = useState(false);
+  const [toggleSideBar, setToggleSideBar] = useState(false);
 
   // Check localStorage for saved user data on mount (for persistence)
   useEffect(() => {
@@ -46,6 +47,11 @@ export const UserProvider = ({ children }) => {
     }, 0);
   };
 
+  const toggleSideBarMethod = () => {
+    console.log("hhelo", toggleSideBar);
+    setToggleSideBar(!toggleSideBar);
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -57,6 +63,8 @@ export const UserProvider = ({ children }) => {
         fetchTask,
         loadUser,
         fetchUser,
+        toggleSideBar,
+        toggleSideBarMethod,
       }}
     >
       {children}
