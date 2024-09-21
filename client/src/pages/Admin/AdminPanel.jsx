@@ -1,18 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { AdminNavbar } from "./components";
-import { Backdrop, Box, CircularProgress, Typography } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 const AdminPanel = () => {
   const { isAdmin } = useSelector((state) => state.user.user);
   const [isbackdrop, setIsbackdrop] = useState(true);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAdmin) {
       setTimeout(() => {
-        // navigate("/login");
+        navigate("/login");
         setIsbackdrop(false);
       }, 2000);
     }
@@ -20,9 +20,8 @@ const AdminPanel = () => {
 
   return (
     <>
-      {isAdmin ? (
+      {!isAdmin ? (
         <>
-          <Typography variant="h5">Checking if you are admin or not</Typography>
           <Backdrop
             sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
             open={isbackdrop}
