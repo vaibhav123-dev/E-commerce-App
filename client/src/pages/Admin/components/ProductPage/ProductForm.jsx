@@ -7,6 +7,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { postRequest } from "../../../../auth/apiRequest";
+import { addProducts } from "../../../../redux/slices/productSlice";
+import { useDispatch } from "react-redux";
+import { useSnackbar } from "../../../../context";
 
 const validationSchema = yup.object({
   name: yup.string().required("Please enter the product name"),
@@ -17,7 +20,6 @@ const validationSchema = yup.object({
   stock: yup.number().required("Please specify the stock"),
   ratings: yup.number().required("Please specify the ratings"),
   numReviews: yup.number().required("Please specify the number of reviews"),
-  images: yup.array().of(yup.string().url("Please enter valid image URLs")),
 });
 
 const Form = () => {
@@ -33,12 +35,26 @@ const Form = () => {
     images: [""],
   };
 
-  const onSubmit = async (data) => {
-    console.log("Form data: ", data); // Check if data is being logged
+  const dispatch = useDispatch();
+  const showSnackbar = useSnackbar();
+
+  const onSubmit = async (data, { resetForm }) => {
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      if (key === "images") {
+        data.images.forEach((file) => formData.append("images", file));
+      } else {
+        formData.append(key, data[key]);
+      }
+    });
+
     try {
-      // Example: Perform API call
-      const product = await postRequest("/product/add-product", data);
-      console.log("Product added:", product);
+      const product = await postRequest("/product/add-product", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      dispatch(addProducts(product?.data));
+      showSnackbar("Product added successful", "success");
+      resetForm();
     } catch (error) {
       console.error("Error adding product:", error);
     }
@@ -210,17 +226,61 @@ const Form = () => {
             <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
               Images
             </Typography>
-            <TextField
-              label="Image URLs"
-              variant="outlined"
-              name="images"
-              fullWidth
-              value={formik.values.images}
-              onChange={(e) =>
-                formik.setFieldValue("images", e.target.value.split(","))
-              }
-              helperText="Add multiple image URLs separated by commas"
-            />
+            <Box display="flex" alignItems="center" flexDirection="column">
+              <Button
+                variant="outlined"
+                component="label"
+                sx={{
+                  padding: "10px 15px",
+                  width: "100%",
+                  borderRadius: 1,
+                  borderColor:
+                    formik.touched.images && formik.errors.images
+                      ? "error.main"
+                      : "primary.main",
+                  color:
+                    formik.touched.images && formik.errors.images
+                      ? "error.main"
+                      : "text.primary",
+                  "&:hover": {
+                    borderColor:
+                      formik.touched.images && formik.errors.images
+                        ? "error.dark"
+                        : "primary.dark",
+                  },
+                }}
+              >
+                Upload Images
+                <input
+                  type="file"
+                  name="images"
+                  hidden
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => {
+                    formik.setFieldValue("images", Array.from(e.target.files));
+                  }}
+                />
+              </Button>
+              <Typography
+                variant="body2"
+                color={
+                  formik.touched.images && formik.errors.images
+                    ? "error.main"
+                    : "text.secondary"
+                }
+                sx={{ marginTop: 1 }}
+              >
+                {formik.values.images && formik.values.images.length > 0
+                  ? `${formik.values.images.length} file(s) selected`
+                  : "No files selected"}
+              </Typography>
+              {formik.touched.images && formik.errors.images && (
+                <Typography color="error" variant="body2" sx={{ marginTop: 1 }}>
+                  {formik.errors.images}
+                </Typography>
+              )}
+            </Box>
           </Grid>
           <Grid item xs={12}>
             <Box display="flex" justifyContent="flex-end">

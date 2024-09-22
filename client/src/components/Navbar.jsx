@@ -20,6 +20,7 @@ import { clearTokens } from "../auth/localStorage";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useSelector } from "react-redux";
 import { getInitials } from "./../services/index";
@@ -57,7 +58,9 @@ function ResponsiveAppBar() {
   const mode = theme.palette.mode;
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const { firstName, lastName } = useSelector((state) => state.user.user);
+  const { firstName, lastName, isAdmin } = useSelector(
+    (state) => state.user.user
+  );
 
   const navigate = useNavigate();
 
@@ -252,6 +255,30 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              {console.log(isAdmin)}
+              {isAdmin && (
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                    <AdminPanelSettingsIcon
+                      sx={{ width: 22, height: 22, color: "green" }}
+                    />
+                    <Typography sx={{ textAlign: "center", fontSize: 14 }}>
+                      <Link
+                        to="/admin/dashboard"
+                        style={{
+                          textDecoration: "none",
+                          color:
+                            mode === "dark"
+                              ? theme.palette.text.primary
+                              : "black",
+                        }}
+                      >
+                        Admin
+                      </Link>
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              )}
               {settings.map((setting) => (
                 <MenuItem
                   key={setting.text}

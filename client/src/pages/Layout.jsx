@@ -9,6 +9,28 @@ import { postRequest } from "../auth/apiRequest.js";
 import { setUser } from "../redux/slices/userSlice.js";
 
 export const PublicLayout = () => {
+  const dispatch = useDispatch();
+
+  const refreshAccessToken = async () => {
+    const refreshToken = getRefreshToken();
+    if (refreshToken) {
+      await postRequest("/user/refresh-token", { refreshToken: refreshToken })
+        .then(({ data }) => {
+          dispatch(setAccessToken(data?.accessToken));
+          saveRefreshToken(data?.refreshToken);
+          dispatch(setUser(data?.user));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    refreshAccessToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div>
       <Navbar />
