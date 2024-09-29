@@ -26,6 +26,7 @@ const Form = () => {
   const initialValues = {
     name: "",
     description: "",
+    oldPrice: "",
     price: "",
     category: "",
     brand: "",
@@ -64,7 +65,7 @@ const Form = () => {
     initialValues,
     validationSchema: validationSchema,
     onSubmit,
-    enableReinitialize: true, // Add this if needed for dynamic initialValues
+    enableReinitialize: true,
   });
 
   return (
@@ -118,6 +119,22 @@ const Form = () => {
               helperText={
                 formik.touched.description && formik.errors.description
               }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
+              Old Price
+            </Typography>
+            <TextField
+              label="Old Price *"
+              variant="outlined"
+              name="oldPrice"
+              fullWidth
+              type="number"
+              value={formik.values.oldPrice}
+              onChange={formik.handleChange}
+              error={formik.touched.oldPrice && Boolean(formik.errors.oldPrice)}
+              helperText={formik.touched.oldPrice && formik.errors.oldPrice}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -222,7 +239,7 @@ const Form = () => {
               helperText={formik.touched.numReviews && formik.errors.numReviews}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <Typography variant={"subtitle2"} sx={{ marginBottom: 2 }}>
               Images
             </Typography>
@@ -231,7 +248,7 @@ const Form = () => {
                 variant="outlined"
                 component="label"
                 sx={{
-                  padding: "10px 15px",
+                  padding: "15px 15px",
                   width: "100%",
                   borderRadius: 1,
                   borderColor:

@@ -7,7 +7,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const addProduct = asyncHandler(async (req, res) => {
   try {
-    const { name, description, price, category, brand, stock, ratings, numReviews, images } =
+    const { name, description, price, category, brand, stock, ratings, numReviews, oldPrice } =
       req.body;
 
     // Check if the category exists or create it if it doesn't
@@ -36,11 +36,15 @@ const addProduct = asyncHandler(async (req, res) => {
       fileUrls = validUploads.map((upload) => upload.secure_url);
     }
 
+    // Set oldPrice to price if oldPrice is not provided
+    const finalOldPrice = oldPrice ? oldPrice : price;
+
     // Create a new product
     const product = new Product({
       name,
       description,
       price,
+      oldPrice: finalOldPrice,
       category: categoryExists._id,
       brand,
       stock,

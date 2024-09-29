@@ -6,6 +6,7 @@ import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/SignUp";
 import { PrivateRoute, PublicLayout } from "../pages/Layout";
 import NotFound from "../pages/NotFound";
+import Products from "../pages/Products/Products";
 import Home from "./../pages/Home/Home";
 
 const routes = [
@@ -25,6 +26,11 @@ const routes = [
       {
         path: "/login",
         element: <Login />,
+        errorElement: <NotFound />,
+      },
+      {
+        path: "/products/fashion",
+        element: <Products />,
         errorElement: <NotFound />,
       },
     ],

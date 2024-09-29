@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { alpha, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 const ThemeModeToggler = () => {
   const theme = useTheme();
@@ -13,10 +13,9 @@ const ThemeModeToggler = () => {
       aria-label="Dark mode toggler"
       color={mode === "light" ? "primary" : "secondary"}
       sx={{
-        borderRadius: 2,
         minWidth: "auto",
         padding: 0.5,
-        borderColor: alpha(theme.palette.divider, 0.2),
+        border: "none",
       }}
     >
       {mode === "light" ? (

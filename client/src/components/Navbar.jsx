@@ -8,7 +8,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useState } from "react";
@@ -25,7 +24,32 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useSelector } from "react-redux";
 import { getInitials } from "./../services/index";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = [
+  {
+    text: "Fashion",
+    path: "/products/fashion",
+  },
+  {
+    text: "Electronic",
+    path: "/product/electronic",
+  },
+  {
+    text: "Beauty",
+    path: "/product/beauty",
+  },
+  {
+    text: "Appliances",
+    path: "/product/appliances",
+  },
+  {
+    text: "Health",
+    path: "/product/health",
+  },
+  {
+    text: "Home Living",
+    path: "/product/home-living",
+  },
+];
 const settings = [
   {
     text: "Edit Profile",
@@ -163,15 +187,27 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page.text} onClick={handleCloseNavMenu}>
                   <Typography
                     sx={{
                       textAlign: "center",
                       color:
                         mode === "dark" ? theme.palette.text.primary : "black",
+                      fontStyle: "bold",
                     }}
                   >
-                    {page}
+                    <Link
+                      to={page.path}
+                      style={{
+                        textDecoration: "none",
+                        color:
+                          mode === "dark"
+                            ? theme.palette.text.primary
+                            : "black",
+                      }}
+                    >
+                      {page.text}
+                    </Link>
                   </Typography>
                 </MenuItem>
               ))}
@@ -206,39 +242,49 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.text}
                 onClick={handleCloseNavMenu}
                 sx={{
                   my: 2,
                   color: mode === "dark" ? theme.palette.text.primary : "black",
                   display: "block",
+                  fontStyle: "bold",
+                  marginLeft: "25px",
                 }}
               >
-                {page}
+                <Link
+                  to={page.path}
+                  style={{
+                    textDecoration: "none",
+                    color:
+                      mode === "dark" ? theme.palette.text.primary : "black",
+                  }}
+                >
+                  {page.text}
+                </Link>
               </Button>
             ))}
           </Box>
 
           {/* User Avatar */}
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt={`${firstName} ${lastName}`}
-                  sx={{
-                    backgroundColor:
-                      mode === "dark"
-                        ? theme.palette.grey[900]
-                        : theme.palette.grey[300],
-                    color:
-                      mode === "dark" ? theme.palette.text.primary : "black",
-                    fontSize: "1.2rem",
-                  }}
-                >
-                  {initials}
-                </Avatar>
-              </IconButton>
-            </Tooltip>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar
+                alt={`${firstName} ${lastName}`}
+                sx={{
+                  backgroundColor:
+                    mode === "dark"
+                      ? theme.palette.grey[900]
+                      : theme.palette.grey[300],
+                  color: mode === "dark" ? theme.palette.text.primary : "black",
+                  fontSize: "1rem",
+                  width: "37px",
+                  height: "37px",
+                }}
+              >
+                {initials}
+              </Avatar>
+            </IconButton>
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
@@ -255,7 +301,6 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {console.log(isAdmin)}
               {isAdmin && (
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
